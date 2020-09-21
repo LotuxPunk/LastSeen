@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "lastseen",
+  "version": "${version}",
+  "name": "Lastseen",
+  "description": "A mod that adds a command to know the last time a player logged in.",
+  "authors": [
+    "LotuxPunk"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/lastseen/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "client": [
+      "com.vandendaelen.lastseen.client.LastseenClient"
+    ],
+    "main": [
+      "com.vandendaelen.lastseen.Lastseen"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.9.3+build.207",
+    "fabric": "*",
+    "minecraft": "1.16.3"
+  }
+}
