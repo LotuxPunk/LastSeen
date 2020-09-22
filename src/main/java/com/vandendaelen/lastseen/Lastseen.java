@@ -9,8 +9,8 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.LiteralText;
 
-import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Lastseen implements ModInitializer {
     @Override
@@ -24,20 +24,26 @@ public class Lastseen implements ModInitializer {
                     dispatcher.register(
                             CommandManager.literal("lastseen")
                                     .then(CommandManager.argument("username", StringArgumentType.string())
-                                            .executes(context -> {
-                                                final PlayerDisconnectionHandler handler = PlayerDisconnectionHandler.getInstance();
-                                                String username = context.getArgument("username", String.class);
-                                                String result = handler.getPlayerLastTime(context.getSource().getMinecraftServer(), username);
-                                                if (result != null){
-                                                    context.getSource().sendFeedback(new LiteralText(username + " : " + result), true);
+                                            .suggests(new CommandSuggestions() {
+                                                @Override
+                                                public List<String> suggestions() {
+                                                    return PlayerDisconnectionHandler.getInstance().getUsernameList();
                                                 }
-                                                else {
-                                                    context.getSource().sendError(new LiteralText("Error : No player found"));
-                                                }
-
-                                                return Command.SINGLE_SUCCESS;
                                             })
-                                    ));
+                                            .executes(context -> {
+                                                    final PlayerDisconnectionHandler handler = PlayerDisconnectionHandler.getInstance();
+                                                    String username = context.getArgument("username", String.class);
+                                                    String result = handler.getPlayerLastTime(context.getSource().getMinecraftServer(), username);
+                                                    if (result != null){
+                                                        context.getSource().sendFeedback(new LiteralText(username + " : " + result), true);
+                                                    }
+                                                    else {
+                                                        context.getSource().sendError(new LiteralText("Error : No player found"));
+                                                    }
+
+                                                    return Command.SINGLE_SUCCESS;
+                                                })
+                                            ));
                 }
         );
     }

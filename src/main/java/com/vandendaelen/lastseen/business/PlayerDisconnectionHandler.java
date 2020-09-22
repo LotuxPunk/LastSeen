@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
@@ -95,11 +96,14 @@ public class PlayerDisconnectionHandler {
 
     private void readJson() {
         final Gson gson = new Gson();
+        final File json = new File("lastseen.json");
         try {
             Type type = new TypeToken<HashMap<String, LocalDateTime>>(){}.getType();
-            Reader reader = Files.newBufferedReader(Paths.get("lastseen.json"));
-            players = gson.fromJson(reader, type);
-            reader.close();
+            if (Files.exists(json.toPath())){
+                Reader reader = Files.newBufferedReader(json.toPath());
+                players = gson.fromJson(reader, type);
+                reader.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
